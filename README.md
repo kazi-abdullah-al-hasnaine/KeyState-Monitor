@@ -1,5 +1,7 @@
 # 🔐 KeyState Monitor
 
+Find the first release inside Release/Release 1.1 folder. 
+
 A modern, real-time Windows application that monitors the state of your keyboard lock keys (Caps Lock, Num Lock, and Scroll Lock) with a sleek, professional GUI.
 
 ![KeyState Monitor](https://img.shields.io/badge/Platform-Windows-blue) ![Python](https://img.shields.io/badge/Python-3.6+-green) ![License](https://img.shields.io/badge/License-MIT-yellow)
