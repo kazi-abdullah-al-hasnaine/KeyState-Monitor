@@ -1,6 +1,9 @@
 import tkinter as tk
-from tkinter import Label
-import keyboard  # pip install keyboard
+from ctypes import windll
+
+# Windows API function to check toggle state
+def get_key_state(vk):
+    return bool(windll.user32.GetKeyState(vk) & 0x0001)
 
 class KeySentinelApp:
     def __init__(self, root):
@@ -10,26 +13,31 @@ class KeySentinelApp:
         self.root.configure(bg="#1e1e2f")
         self.root.resizable(False, False)
 
-        self.labels = {
-            'Caps Lock': Label(root, font=('Arial', 14), bg="#1e1e2f", fg="white"),
-            'Num Lock': Label(root, font=('Arial', 14), bg="#1e1e2f", fg="white"),
-            'Scroll Lock': Label(root, font=('Arial', 14), bg="#1e1e2f", fg="white"),
-        }
+        self.label_caps = tk.Label(root, font=('Arial', 14), bg="#1e1e2f")
+        self.label_num = tk.Label(root, font=('Arial', 14), bg="#1e1e2f")
+        self.label_scroll = tk.Label(root, font=('Arial', 14), bg="#1e1e2f")
 
-        for i, label in enumerate(self.labels.values()):
-            label.pack(pady=8)
+        self.label_caps.pack(pady=8)
+        self.label_num.pack(pady=8)
+        self.label_scroll.pack(pady=8)
 
         self.update_status()
 
     def update_status(self):
-        for key in self.labels:
-            is_on = keyboard.is_pressed(key.lower())
-            color = "#00ff00" if is_on else "#ff5555"
-            status_text = f"{key}: {'ON' if is_on else 'OFF'}"
-            self.labels[key].config(text=status_text, fg=color)
+        # Virtual key codes
+        caps = get_key_state(0x14)
+        num = get_key_state(0x90)
+        scroll = get_key_state(0x91)
 
-        # Schedule the next update in 200 ms
+        self.set_label(self.label_caps, "Caps Lock", caps)
+        self.set_label(self.label_num, "Num Lock", num)
+        self.set_label(self.label_scroll, "Scroll Lock", scroll)
+
         self.root.after(200, self.update_status)
+
+    def set_label(self, label, name, state):
+        color = "#00ff00" if state else "#ff5555"
+        label.config(text=f"{name}: {'ON' if state else 'OFF'}", fg=color)
 
 if __name__ == "__main__":
     root = tk.Tk()
